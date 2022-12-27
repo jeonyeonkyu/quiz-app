@@ -15,6 +15,7 @@ const LayoutContainer = styled.div`
   padding: 0 16px;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 `
 
 export default Layout
