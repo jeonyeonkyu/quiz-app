@@ -1,11 +1,23 @@
 import React from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
+import Home from './pages/Home'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Layout from './components/layout'
+import { CssBaseline } from '@mui/material'
+import routes from './consts/routes'
+import Quiz from './pages/Quiz'
 
 function App() {
   return (
     <>
       <CssBaseline />
-      Hello
+      <Layout>
+        <Router>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path={routes.quiz} element={<Quiz />} />
+          </Routes>
+        </Router>
+      </Layout>
     </>
   )
 }
