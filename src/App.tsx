@@ -1,7 +1,13 @@
 import React from 'react'
+import CssBaseline from '@mui/material/CssBaseline'
 
 function App() {
-  return <div>Hello</div>
+  return (
+    <>
+      <CssBaseline />
+      Hello
+    </>
+  )
 }
 
 export default App
