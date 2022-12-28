@@ -1,12 +1,13 @@
 import { Quiz } from './quizTypes'
 
-export const API_URL = 'https://opentdb.com/api.php'
-
-const PROXY_API_URL = 'http://localhost:4000'
+const apiURL =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_API_URL
+    : '/quizzes'
 
 export const getQuiz = async (amount = 10): Promise<Quiz[]> => {
   try {
-    const response = await fetch(`${PROXY_API_URL}?amount=${amount}`)
+    const response = await fetch(`${apiURL}?amount=${amount}`)
     if (response.ok) {
       return (await response.json()).results
     }

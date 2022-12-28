@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Button } from '@mui/material'
 import { Link } from 'react-router-dom'
-import routes from '../consts/routes'
+import { routes } from '../Routes'
 
 const Home = () => {
   return (

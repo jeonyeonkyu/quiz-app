@@ -1,11 +1,41 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import QuizBox from '../components/quiz/QuizBox'
 import useQuiz from '../hooks/useQuiz'
 
 const QuizContainer = () => {
-  const { quizs } = useQuiz()
+  const {
+    quizzes,
+    currentQuizIndex,
+    loading,
+    hasError,
+    setCheckedAnswer,
+    setNextQuiz,
+  } = useQuiz()
 
-  return <QuizBox {...{ quizs }} />
+  const handleChecked = useCallback((index: number) => {
+    setCheckedAnswer(index)
+  }, [])
+
+  const handleClickNextButton = useCallback(() => {
+    setNextQuiz()
+  }, [])
+
+  if (loading) return <>loading...</>
+  if (hasError) return <>Error</>
+  return (
+    <>
+      {quizzes.length && (
+        <QuizBox
+          {...{
+            quizzes,
+            currentQuizIndex,
+            handleChecked,
+            handleClickNextButton,
+          }}
+        />
+      )}
+    </>
+  )
 }
 
 export default QuizContainer
