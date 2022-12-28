@@ -7,12 +7,15 @@ import {
   RadioGroup,
 } from '@mui/material'
 import { UserQuiz } from '../../api/quizTypes'
+import Correct from '../animations/Correct'
+import Wrong from '../animations/Wrong'
 
 type Props = {
   quizzes: UserQuiz[]
   currentQuizIndex: number
   handleChecked: (index: number) => void
   handleClickNextButton: () => void
+  hasCorrectAnswers: boolean[]
 }
 
 const QuizBox = ({
@@ -20,11 +23,14 @@ const QuizBox = ({
   currentQuizIndex,
   handleChecked,
   handleClickNextButton,
+  hasCorrectAnswers,
 }: Props) => {
   const quiz = quizzes[currentQuizIndex]
-
+  const hasCorrectAnswer = hasCorrectAnswers[currentQuizIndex]
   return (
     <QuizBoxWrapper>
+      {hasCorrectAnswer === true && <Correct />}
+      {hasCorrectAnswer === false && <Wrong />}
       <Category>{quiz.category}</Category>
       <Difficulty label={quiz.difficulty} />
 
@@ -50,20 +56,23 @@ const QuizBox = ({
       </RadioGroup>
 
       <NextButtonWrapper>
-        {quizzes.length - 1 !== currentQuizIndex && (
-          <>
-            {quiz.checkedAnswer && (
-              <Button onClick={handleClickNextButton}>다음 문항</Button>
-            )}
-          </>
-        )}
-        {quizzes.length - 1 === currentQuizIndex && <Button>완료</Button>}
+        <>
+          {quiz.checkedAnswer && (
+            <Button
+              onClick={handleClickNextButton}
+              disabled={hasCorrectAnswer !== undefined}
+            >
+              {quizzes.length - 1 !== currentQuizIndex ? '다음 문항' : '완료'}
+            </Button>
+          )}
+        </>
       </NextButtonWrapper>
     </QuizBoxWrapper>
   )
 }
 
 const QuizBoxWrapper = styled.div`
+  position: relative;
   padding: 16px;
   border: 1px solid black;
   min-width: 600px;
@@ -88,5 +97,4 @@ const Question = styled.div`
 const NextButtonWrapper = styled.div`
   height: 40px;
 `
-
 export default QuizBox

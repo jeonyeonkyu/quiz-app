@@ -5,12 +5,15 @@ import shallow from 'zustand/shallow'
 const useQuiz = () => {
   const {
     fetch,
+    hasCorrectAnswers,
     quizzes,
     currentQuizIndex,
     loading,
     hasError,
     setCheckedAnswer,
     setNextQuiz,
+    isSuccess,
+    setSuccess,
   } = quizStore(
     (state) => ({
       fetch: state.fetch,
@@ -20,6 +23,9 @@ const useQuiz = () => {
       hasError: state.hasError,
       setCheckedAnswer: state.setCheckedAnswer,
       setNextQuiz: state.setNextQuiz,
+      hasCorrectAnswers: state.hasCorrectAnswers,
+      isSuccess: state.isSuccess,
+      setSuccess: state.setSuccess,
     }),
     shallow
   )
@@ -30,11 +36,14 @@ const useQuiz = () => {
 
   return {
     quizzes,
+    hasCorrectAnswers,
     currentQuizIndex,
     loading,
     hasError,
     setCheckedAnswer,
     setNextQuiz,
+    isSuccess,
+    setSuccess,
   }
 }
 

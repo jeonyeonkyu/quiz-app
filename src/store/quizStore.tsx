@@ -4,12 +4,15 @@ import { UserQuiz } from '../api/quizTypes'
 
 interface QuizStore {
   quizzes: UserQuiz[]
+  hasCorrectAnswers: boolean[]
   fetch: () => void
   currentQuizIndex: number
   loading: boolean
   hasError: boolean
+  isSuccess: boolean
   setCheckedAnswer: (selectedAnswer: number) => void
   setNextQuiz: () => void
+  setSuccess: () => void
 }
 
 const getRandomAnswers = (
@@ -27,9 +30,11 @@ const decodeHTMLEntities = (value: string) => {
 
 const quizStore = create<QuizStore>((set, get) => ({
   quizzes: [],
+  hasCorrectAnswers: [],
   currentQuizIndex: 0,
   loading: false,
   hasError: false,
+  isSuccess: false,
   fetch: async () => {
     try {
       set({ loading: true, hasError: false })
@@ -57,9 +62,22 @@ const quizStore = create<QuizStore>((set, get) => ({
     )
     set({ quizzes: checkedQuizzes })
   },
+  setSuccess: () => {
+    set({ isSuccess: true })
+  },
   setNextQuiz: () => {
-    const { currentQuizIndex } = get()
-    set({ currentQuizIndex: currentQuizIndex + 1 })
+    const { currentQuizIndex, quizzes, hasCorrectAnswers, setSuccess } = get()
+    const quiz = quizzes[currentQuizIndex]
+    const isCorrect = quiz.checkedAnswer === quiz.correct_answer
+    set({ hasCorrectAnswers: [...hasCorrectAnswers, isCorrect] })
+
+    setTimeout(() => {
+      if (currentQuizIndex === quizzes.length - 1) {
+        setSuccess()
+      } else {
+        set({ currentQuizIndex: currentQuizIndex + 1 })
+      }
+    }, 1000)
   },
 }))
 export default quizStore

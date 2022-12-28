@@ -1,9 +1,15 @@
 import React from 'react'
-import { screen, waitFor } from '@testing-library/react'
+import { renderHook, screen, waitFor } from '@testing-library/react'
 import App from '../App'
 import { renderWithRouter, textContentMatcher } from '../testing'
 import { routes } from '../Routes'
 import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils'
+import useQuiz from '../hooks/useQuiz'
+
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 describe('퀴즈 페이지', () => {
   it('퀴즈를 선택하여 다음으로 넘어갈 수 있다', async () => {
@@ -24,8 +30,21 @@ describe('퀴즈 페이지', () => {
     expect(screen.getByText('다음 문항')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('다음 문항'))
+
+    await act(async () => {
+      await sleep(1000)
+    })
+
     expect(
       await screen.findByText(textContentMatcher(/2.*/))
     ).toBeInTheDocument()
+  })
+
+  it('퀴즈를 완료할 수 있다', async () => {
+    renderWithRouter(<App />, { route: routes.quiz })
+    const { result } = renderHook(() => useQuiz())
+    act(() => result.current.setSuccess())
+    const top = await screen.findByText('결과')
+    expect(top).toBeInTheDocument()
   })
 })
