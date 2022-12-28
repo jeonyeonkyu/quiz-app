@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useMemo } from 'react'
 import { QuizStore } from '../../store/quizStore'
 import { formatTime } from '../../utils/timeUtils'
-import DoughnutChart from '../chart/Doughnut'
+import DoughnutChart from '../chart/DoughnutChart'
 
 type Props = Pick<QuizStore, 'startTime' | 'endTime' | 'hasCorrectAnswers'> & {}
 
@@ -37,9 +37,10 @@ const SuccessBox = ({ startTime, endTime, hasCorrectAnswers }: Props) => {
 
         <div>
           <DoughnutChart
-            labels={['정답', '오답']}
-            label="개수"
-            data={[correctAnswerCount, wrongAnswerCount]}
+            data={[
+              ['정답', correctAnswerCount],
+              ['오답', wrongAnswerCount],
+            ]}
           />
         </div>
       </SuccessBoxWrapper>

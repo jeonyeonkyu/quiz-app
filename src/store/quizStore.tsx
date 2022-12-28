@@ -86,7 +86,7 @@ const quizStore = create<QuizStore>((set, get) => ({
       } else {
         set({ currentQuizIndex: currentQuizIndex + 1 })
       }
-    }, 1000)
+    }, 1)
   },
 }))
 export default quizStore
