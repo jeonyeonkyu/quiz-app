@@ -13,19 +13,18 @@ const QuizContainer = () => {
     setCheckedAnswer,
     setNextQuiz,
     isSuccess,
+    startTime,
+    endTime,
   } = useQuiz()
 
   const handleChecked = useCallback((index: number) => {
     setCheckedAnswer(index)
   }, [])
 
-  const handleClickNextButton = useCallback(() => {
-    setNextQuiz()
-  }, [])
-
   if (loading) return <>loading...</>
   if (hasError) return <>Error</>
-  if (isSuccess) return <SuccessBox />
+  if (isSuccess)
+    return <SuccessBox {...{ startTime, endTime, hasCorrectAnswers }} />
   return (
     <>
       {quizzes.length && (
@@ -34,7 +33,7 @@ const QuizContainer = () => {
             quizzes,
             currentQuizIndex,
             handleChecked,
-            handleClickNextButton,
+            setNextQuiz,
             hasCorrectAnswers,
           }}
         />

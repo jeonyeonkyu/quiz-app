@@ -6,68 +6,72 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material'
-import { UserQuiz } from '../../api/quizTypes'
+import { QuizStore } from '../../store/quizStore'
 import Correct from '../animations/Correct'
 import Wrong from '../animations/Wrong'
 
-type Props = {
-  quizzes: UserQuiz[]
-  currentQuizIndex: number
+type Props = Pick<
+  QuizStore,
+  'quizzes' | 'currentQuizIndex' | 'hasCorrectAnswers' | 'setNextQuiz'
+> & {
   handleChecked: (index: number) => void
-  handleClickNextButton: () => void
-  hasCorrectAnswers: boolean[]
 }
 
 const QuizBox = ({
   quizzes,
   currentQuizIndex,
   handleChecked,
-  handleClickNextButton,
   hasCorrectAnswers,
+  setNextQuiz,
 }: Props) => {
   const quiz = quizzes[currentQuizIndex]
   const hasCorrectAnswer = hasCorrectAnswers[currentQuizIndex]
   return (
-    <QuizBoxWrapper>
-      {hasCorrectAnswer === true && <Correct />}
-      {hasCorrectAnswer === false && <Wrong />}
-      <Category>{quiz.category}</Category>
-      <Difficulty label={quiz.difficulty} />
+    <>
+      <Header>
+        <h1>퀴즈</h1>
+      </Header>
+      <QuizBoxWrapper>
+        {hasCorrectAnswer === true && <Correct />}
+        {hasCorrectAnswer === false && <Wrong />}
+        <Category>{quiz.category}</Category>
+        <Difficulty label={quiz.difficulty} />
 
-      <Question role="question">{`${currentQuizIndex + 1}. ${
-        quiz.question
-      }`}</Question>
-      <RadioGroup
-        aria-labelledby="radio-buttons-group-label"
-        name="radio-buttons-group"
-      >
-        {quiz.incorrect_answers.map((answer, index) => {
-          return (
-            <FormControlLabel
-              key={answer}
-              value={answer}
-              control={
-                <Radio role="radio" onChange={() => handleChecked(index)} />
-              }
-              label={answer}
-            />
-          )
-        })}
-      </RadioGroup>
+        <Question role="question">{`${currentQuizIndex + 1}. ${
+          quiz.question
+        }`}</Question>
+        <RadioGroup
+          aria-labelledby="radio-buttons-group-label"
+          name="radio-buttons-group"
+        >
+          {quiz.incorrect_answers.map((answer, index) => {
+            return (
+              <FormControlLabel
+                key={answer}
+                value={answer}
+                control={
+                  <Radio role="radio" onChange={() => handleChecked(index)} />
+                }
+                label={answer}
+              />
+            )
+          })}
+        </RadioGroup>
 
-      <NextButtonWrapper>
-        <>
-          {quiz.checkedAnswer && (
-            <Button
-              onClick={handleClickNextButton}
-              disabled={hasCorrectAnswer !== undefined}
-            >
-              {quizzes.length - 1 !== currentQuizIndex ? '다음 문항' : '완료'}
-            </Button>
-          )}
-        </>
-      </NextButtonWrapper>
-    </QuizBoxWrapper>
+        <NextButtonWrapper>
+          <>
+            {quiz.checkedAnswer && (
+              <Button
+                onClick={setNextQuiz}
+                disabled={hasCorrectAnswer !== undefined}
+              >
+                {quizzes.length - 1 !== currentQuizIndex ? '다음 문항' : '완료'}
+              </Button>
+            )}
+          </>
+        </NextButtonWrapper>
+      </QuizBoxWrapper>
+    </>
   )
 }
 
@@ -83,6 +87,7 @@ const QuizBoxWrapper = styled.div`
     min-width: auto;
   }
 `
+const Header = styled.header``
 
 const Category = styled.span``
 const Difficulty = styled(Chip)`

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import useQuiz from '../hooks/useQuiz'
 
-const sleep = (ms: number) => {
+const delay = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
@@ -31,8 +31,9 @@ describe('퀴즈 페이지', () => {
 
     userEvent.click(screen.getByText('다음 문항'))
 
+    // 애니메이션 요소로 인해 1초간 딜레이 됩니다.
     await act(async () => {
-      await sleep(1000)
+      await delay(1000)
     })
 
     expect(

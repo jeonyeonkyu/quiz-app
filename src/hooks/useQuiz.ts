@@ -14,6 +14,8 @@ const useQuiz = () => {
     setNextQuiz,
     isSuccess,
     setSuccess,
+    startTime,
+    endTime,
   } = quizStore(
     (state) => ({
       fetch: state.fetch,
@@ -26,6 +28,8 @@ const useQuiz = () => {
       hasCorrectAnswers: state.hasCorrectAnswers,
       isSuccess: state.isSuccess,
       setSuccess: state.setSuccess,
+      startTime: state.startTime,
+      endTime: state.endTime,
     }),
     shallow
   )
@@ -44,6 +48,8 @@ const useQuiz = () => {
     setNextQuiz,
     isSuccess,
     setSuccess,
+    startTime,
+    endTime,
   }
 }
 

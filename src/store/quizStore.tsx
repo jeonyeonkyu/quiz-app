@@ -2,7 +2,7 @@ import create from 'zustand'
 import { getQuiz } from '../api/quizApi'
 import { UserQuiz } from '../api/quizTypes'
 
-interface QuizStore {
+export interface QuizStore {
   quizzes: UserQuiz[]
   hasCorrectAnswers: boolean[]
   fetch: () => void
@@ -13,6 +13,8 @@ interface QuizStore {
   setCheckedAnswer: (selectedAnswer: number) => void
   setNextQuiz: () => void
   setSuccess: () => void
+  startTime: string
+  endTime: string
 }
 
 const getRandomAnswers = (
@@ -35,6 +37,9 @@ const quizStore = create<QuizStore>((set, get) => ({
   loading: false,
   hasError: false,
   isSuccess: false,
+  startTime: '',
+  endTime: '',
+
   fetch: async () => {
     try {
       set({ loading: true, hasError: false })
@@ -48,11 +53,13 @@ const quizStore = create<QuizStore>((set, get) => ({
         correct_answer: decodeHTMLEntities(quiz.correct_answer),
         checkedAnswer: '',
       }))
-      set({ quizzes, loading: false })
+
+      set({ quizzes, loading: false, startTime: new Date().toISOString() })
     } catch (e) {
       set({ hasError: true, loading: false })
     }
   },
+
   setCheckedAnswer: (selectedIndex: number) => {
     const { currentQuizIndex, quizzes } = get()
     const checkedQuizzes = quizzes.map((quiz, index) =>
@@ -62,9 +69,11 @@ const quizStore = create<QuizStore>((set, get) => ({
     )
     set({ quizzes: checkedQuizzes })
   },
+
   setSuccess: () => {
-    set({ isSuccess: true })
+    set({ isSuccess: true, endTime: new Date().toISOString() })
   },
+
   setNextQuiz: () => {
     const { currentQuizIndex, quizzes, hasCorrectAnswers, setSuccess } = get()
     const quiz = quizzes[currentQuizIndex]
