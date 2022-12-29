@@ -1,9 +1,7 @@
 import { Quiz } from './quizTypes'
 
 const apiURL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.REACT_APP_API_URL
-    : '/quizzes'
+  process.env.NODE_ENV === 'test' ? '/quizzes' : process.env.REACT_APP_API_URL
 
 export const getQuiz = async (amount = 10): Promise<Quiz[]> => {
   try {
