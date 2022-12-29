@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Button } from '@mui/material'
 import React, { useMemo } from 'react'
 import { QuizStore } from '../../store/quizStore'
 import { formatTime } from '../../utils/timeUtils'
@@ -43,6 +44,8 @@ const SuccessBox = ({ startTime, endTime, hasCorrectAnswers }: Props) => {
             ]}
           />
         </div>
+
+        <Button variant="contained">오답노트</Button>
       </SuccessBoxWrapper>
     </>
   )

@@ -44,7 +44,8 @@ describe('퀴즈 페이지', () => {
   it('퀴즈를 완료할 수 있다', async () => {
     renderWithRouter(<App />, { route: routes.quiz })
     const { result } = renderHook(() => useQuiz())
-    act(() => result.current.setSuccess())
+    const { setQuizPage, quizzes } = result.current
+    act(() => setQuizPage(quizzes.length))
     const top = await screen.findByText('결과')
     expect(top).toBeInTheDocument()
   })

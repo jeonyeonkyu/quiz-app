@@ -9,10 +9,10 @@ export interface QuizStore {
   currentQuizIndex: number
   loading: boolean
   hasError: boolean
-  isSuccess: boolean
   setCheckedAnswer: (selectedAnswer: number) => void
+  setQuizPage: (pageIndex: number, pageMoveDelay?: number) => void
+  setPrevPage: () => void
   setNextQuiz: () => void
-  setSuccess: () => void
   startTime: string
   endTime: string
 }
@@ -36,7 +36,6 @@ const quizStore = create<QuizStore>((set, get) => ({
   currentQuizIndex: 0,
   loading: false,
   hasError: false,
-  isSuccess: false,
   startTime: '',
   endTime: '',
 
@@ -70,23 +69,43 @@ const quizStore = create<QuizStore>((set, get) => ({
     set({ quizzes: checkedQuizzes })
   },
 
-  setSuccess: () => {
-    set({ isSuccess: true, endTime: new Date().toISOString() })
+  setQuizPage: (pageIndex, pageMoveDelay) => {
+    if (!pageMoveDelay) {
+      return set({ currentQuizIndex: pageIndex })
+    } else {
+      setTimeout(() => {
+        set({ currentQuizIndex: pageIndex })
+      }, pageMoveDelay)
+    }
   },
 
   setNextQuiz: () => {
-    const { currentQuizIndex, quizzes, hasCorrectAnswers, setSuccess } = get()
+    const {
+      currentQuizIndex,
+      quizzes,
+      hasCorrectAnswers,
+      endTime,
+      setQuizPage,
+    } = get()
+
+    if (endTime) {
+      return setQuizPage(currentQuizIndex + 1)
+    }
+
     const quiz = quizzes[currentQuizIndex]
     const isCorrect = quiz.checkedAnswer === quiz.correct_answer
-    set({ hasCorrectAnswers: [...hasCorrectAnswers, isCorrect] })
+    const isSuccess = quizzes.length && quizzes.length - 1 === currentQuizIndex
+    set({
+      hasCorrectAnswers: [...hasCorrectAnswers, isCorrect],
+      endTime: isSuccess ? new Date().toISOString() : endTime,
+    })
+    setQuizPage(currentQuizIndex + 1, 1000)
+  },
 
-    setTimeout(() => {
-      if (currentQuizIndex === quizzes.length - 1) {
-        setSuccess()
-      } else {
-        set({ currentQuizIndex: currentQuizIndex + 1 })
-      }
-    }, 1)
+  setPrevPage: () => {
+    const { currentQuizIndex, setQuizPage } = get()
+    setQuizPage(currentQuizIndex - 1)
   },
 }))
+
 export default quizStore

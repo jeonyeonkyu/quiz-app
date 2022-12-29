@@ -50,7 +50,11 @@ const QuizBox = ({
                 key={answer}
                 value={answer}
                 control={
-                  <Radio role="radio" onChange={() => handleChecked(index)} />
+                  <Radio
+                    role="radio"
+                    onChange={() => handleChecked(index)}
+                    disabled={hasCorrectAnswer !== undefined}
+                  />
                 }
                 label={answer}
               />

@@ -12,7 +12,6 @@ const QuizContainer = () => {
     hasError,
     setCheckedAnswer,
     setNextQuiz,
-    isSuccess,
     startTime,
     endTime,
   } = useQuiz()
@@ -23,8 +22,9 @@ const QuizContainer = () => {
 
   if (loading) return <>loading...</>
   if (hasError) return <>Error</>
-  if (isSuccess)
+  if (quizzes.length && quizzes.length === currentQuizIndex)
     return <SuccessBox {...{ startTime, endTime, hasCorrectAnswers }} />
+
   return (
     <>
       {quizzes.length && (

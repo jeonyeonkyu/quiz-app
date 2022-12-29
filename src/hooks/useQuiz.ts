@@ -12,10 +12,9 @@ const useQuiz = () => {
     hasError,
     setCheckedAnswer,
     setNextQuiz,
-    isSuccess,
-    setSuccess,
     startTime,
     endTime,
+    setQuizPage,
   } = quizStore(
     (state) => ({
       fetch: state.fetch,
@@ -26,10 +25,9 @@ const useQuiz = () => {
       setCheckedAnswer: state.setCheckedAnswer,
       setNextQuiz: state.setNextQuiz,
       hasCorrectAnswers: state.hasCorrectAnswers,
-      isSuccess: state.isSuccess,
-      setSuccess: state.setSuccess,
       startTime: state.startTime,
       endTime: state.endTime,
+      setQuizPage: state.setQuizPage,
     }),
     shallow
   )
@@ -46,10 +44,9 @@ const useQuiz = () => {
     hasError,
     setCheckedAnswer,
     setNextQuiz,
-    isSuccess,
-    setSuccess,
     startTime,
     endTime,
+    setQuizPage,
   }
 }
 
