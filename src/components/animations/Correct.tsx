@@ -1,12 +1,17 @@
 import React from 'react'
 import './Correct.css'
 
-const Correct = () => {
+type Props = {
+  width: string
+}
+
+const Correct = ({ width }: Props) => {
   return (
     <div className="svg-circle-wrapper">
       <svg
         className="svg-circle"
         version="1.1"
+        style={{ width }}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 130.2 130.2"
       >

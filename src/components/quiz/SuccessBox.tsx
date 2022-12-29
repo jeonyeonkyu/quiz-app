@@ -5,9 +5,16 @@ import { QuizStore } from '../../store/quizStore'
 import { formatTime } from '../../utils/timeUtils'
 import DoughnutChart from '../chart/DoughnutChart'
 
-type Props = Pick<QuizStore, 'startTime' | 'endTime' | 'hasCorrectAnswers'> & {}
+type Props = Pick<QuizStore, 'startTime' | 'endTime' | 'hasCorrectAnswers'> & {
+  setFirstPage: () => void
+}
 
-const SuccessBox = ({ startTime, endTime, hasCorrectAnswers }: Props) => {
+const SuccessBox = ({
+  startTime,
+  endTime,
+  hasCorrectAnswers,
+  setFirstPage,
+}: Props) => {
   const timeTaken = useMemo(
     () =>
       formatTime(new Date(endTime).getTime() - new Date(startTime).getTime()),
@@ -45,7 +52,9 @@ const SuccessBox = ({ startTime, endTime, hasCorrectAnswers }: Props) => {
           />
         </div>
 
-        <Button variant="contained">오답노트</Button>
+        <Button variant="contained" onClick={setFirstPage}>
+          오답노트
+        </Button>
       </SuccessBoxWrapper>
     </>
   )

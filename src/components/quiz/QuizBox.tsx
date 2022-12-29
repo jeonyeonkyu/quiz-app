@@ -12,7 +12,12 @@ import Wrong from '../animations/Wrong'
 
 type Props = Pick<
   QuizStore,
-  'quizzes' | 'currentQuizIndex' | 'hasCorrectAnswers' | 'setNextQuiz'
+  | 'quizzes'
+  | 'currentQuizIndex'
+  | 'hasCorrectAnswers'
+  | 'setNextQuiz'
+  | 'endTime'
+  | 'setPrevPage'
 > & {
   handleChecked: (index: number) => void
 }
@@ -23,6 +28,8 @@ const QuizBox = ({
   handleChecked,
   hasCorrectAnswers,
   setNextQuiz,
+  endTime,
+  setPrevPage,
 }: Props) => {
   const quiz = quizzes[currentQuizIndex]
   const hasCorrectAnswer = hasCorrectAnswers[currentQuizIndex]
@@ -32,8 +39,12 @@ const QuizBox = ({
         <h1>퀴즈</h1>
       </Header>
       <QuizBoxWrapper>
-        {hasCorrectAnswer === true && <Correct />}
-        {hasCorrectAnswer === false && <Wrong />}
+        {hasCorrectAnswer === true && (
+          <Correct width={endTime ? '100px' : '500px'} />
+        )}
+        {hasCorrectAnswer === false && (
+          <Wrong width={endTime ? '100px' : '500px'} />
+        )}
         <Category>{quiz.category}</Category>
         <Difficulty label={quiz.difficulty} />
 
@@ -52,6 +63,7 @@ const QuizBox = ({
                 control={
                   <Radio
                     role="radio"
+                    checked={answer === quiz.checkedAnswer}
                     onChange={() => handleChecked(index)}
                     disabled={hasCorrectAnswer !== undefined}
                   />
@@ -62,18 +74,28 @@ const QuizBox = ({
           })}
         </RadioGroup>
 
-        <NextButtonWrapper>
+        <ButtonWrapper>
+          <>
+            {endTime && currentQuizIndex !== 0 && (
+              <Button style={{ width: '90px' }} onClick={setPrevPage}>
+                이전 문항
+              </Button>
+            )}
+          </>
+
+          <Spacing />
           <>
             {quiz.checkedAnswer && (
               <Button
+                style={{ width: '90px' }}
                 onClick={setNextQuiz}
-                disabled={hasCorrectAnswer !== undefined}
+                disabled={!endTime && hasCorrectAnswer !== undefined}
               >
                 {quizzes.length - 1 !== currentQuizIndex ? '다음 문항' : '완료'}
               </Button>
             )}
           </>
-        </NextButtonWrapper>
+        </ButtonWrapper>
       </QuizBoxWrapper>
     </>
   )
@@ -103,7 +125,13 @@ const Question = styled.div`
   margin-bottom: 16px;
 `
 
-const NextButtonWrapper = styled.div`
+const ButtonWrapper = styled.div`
+  display: flex;
   height: 40px;
+  justify-content: space-between;
+`
+
+const Spacing = styled.div`
+  width: 100%;
 `
 export default QuizBox

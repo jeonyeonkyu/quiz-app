@@ -9,12 +9,14 @@ export interface QuizStore {
   currentQuizIndex: number
   loading: boolean
   hasError: boolean
+  incorrectAnswerNotes: string[]
   setCheckedAnswer: (selectedAnswer: number) => void
   setQuizPage: (pageIndex: number, pageMoveDelay?: number) => void
   setPrevPage: () => void
   setNextQuiz: () => void
   startTime: string
   endTime: string
+  setIncorrectAnswerNotes: (value: string) => void
 }
 
 const getRandomAnswers = (
@@ -38,6 +40,7 @@ const quizStore = create<QuizStore>((set, get) => ({
   hasError: false,
   startTime: '',
   endTime: '',
+  incorrectAnswerNotes: [],
 
   fetch: async () => {
     try {
@@ -53,7 +56,12 @@ const quizStore = create<QuizStore>((set, get) => ({
         checkedAnswer: '',
       }))
 
-      set({ quizzes, loading: false, startTime: new Date().toISOString() })
+      set({
+        quizzes,
+        loading: false,
+        startTime: new Date().toISOString(),
+        incorrectAnswerNotes: Array.from({ length: quizzes.length }, () => ''),
+      })
     } catch (e) {
       set({ hasError: true, loading: false })
     }
@@ -70,11 +78,18 @@ const quizStore = create<QuizStore>((set, get) => ({
   },
 
   setQuizPage: (pageIndex, pageMoveDelay) => {
+    const { endTime, quizzes, currentQuizIndex } = get()
     if (!pageMoveDelay) {
       return set({ currentQuizIndex: pageIndex })
     } else {
+      const isSuccess =
+        !endTime && quizzes.length && quizzes.length - 1 === currentQuizIndex
+
       setTimeout(() => {
-        set({ currentQuizIndex: pageIndex })
+        set({
+          currentQuizIndex: pageIndex,
+          endTime: isSuccess ? new Date().toISOString() : endTime,
+        })
       }, pageMoveDelay)
     }
   },
@@ -94,10 +109,8 @@ const quizStore = create<QuizStore>((set, get) => ({
 
     const quiz = quizzes[currentQuizIndex]
     const isCorrect = quiz.checkedAnswer === quiz.correct_answer
-    const isSuccess = quizzes.length && quizzes.length - 1 === currentQuizIndex
     set({
       hasCorrectAnswers: [...hasCorrectAnswers, isCorrect],
-      endTime: isSuccess ? new Date().toISOString() : endTime,
     })
     setQuizPage(currentQuizIndex + 1, 1000)
   },
@@ -105,6 +118,15 @@ const quizStore = create<QuizStore>((set, get) => ({
   setPrevPage: () => {
     const { currentQuizIndex, setQuizPage } = get()
     setQuizPage(currentQuizIndex - 1)
+  },
+
+  setIncorrectAnswerNotes: (value) => {
+    const { currentQuizIndex, incorrectAnswerNotes } = get()
+
+    const changedIncorrectAnswerNotes = incorrectAnswerNotes.map(
+      (string, index) => (index === currentQuizIndex ? value : string)
+    )
+    set({ incorrectAnswerNotes: changedIncorrectAnswerNotes })
   },
 }))
 

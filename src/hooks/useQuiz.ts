@@ -14,7 +14,10 @@ const useQuiz = () => {
     setNextQuiz,
     startTime,
     endTime,
+    setPrevPage,
     setQuizPage,
+    setIncorrectAnswerNotes,
+    incorrectAnswerNotes,
   } = quizStore(
     (state) => ({
       fetch: state.fetch,
@@ -27,7 +30,10 @@ const useQuiz = () => {
       hasCorrectAnswers: state.hasCorrectAnswers,
       startTime: state.startTime,
       endTime: state.endTime,
+      setPrevPage: state.setPrevPage,
       setQuizPage: state.setQuizPage,
+      setIncorrectAnswerNotes: state.setIncorrectAnswerNotes,
+      incorrectAnswerNotes: state.incorrectAnswerNotes,
     }),
     shallow
   )
@@ -46,7 +52,10 @@ const useQuiz = () => {
     setNextQuiz,
     startTime,
     endTime,
+    setPrevPage,
     setQuizPage,
+    setIncorrectAnswerNotes,
+    incorrectAnswerNotes,
   }
 }
 
